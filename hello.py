@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request,url_for,redirect
-import json , requests,os
+import json , requests, os
 
 
 cookies={}
@@ -9,12 +9,12 @@ item={}
 url ='https://hunter-todo-api.herokuapp.com/user'
 app = Flask(__name__)
 
+
+
 with open('data.json') as file:
 	data = json.load(file)
 	
-if __name__ == "__main__":
-	port = int(os.environ.get("PORT", 5000))
-	app.run(host="0.0.0.0", port=port, threaded=True)
+
 
 
 @app.route('/', methods=['GET','POST'])
@@ -142,3 +142,6 @@ def logout():
 	return render_template("logout.html")	
 
 
+if __name__ == "__main__":
+	port = int(os.environ.get("PORT", 5000))
+	app.run(host="0.0.0.0", port=port, threaded=True)
