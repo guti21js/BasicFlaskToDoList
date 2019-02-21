@@ -1,0 +1,32 @@
+<html>
+	<head>
+	</head>
+	<body>
+		
+		<h2>To Do: </h2>
+		<ul>
+			{% for task in tasks %}
+				{% if task['completed'] == False %}
+				<li >{{task['content']}}</li>
+				<a href="/change/{{task['id']}}">Edit</a>
+				<a href="/delete/{{task['id']}}">Delete</a>
+				<a href="/done/{{task['id']}}">Done</a>
+				
+				{%else%}
+				<li><strike>{{task['content']}}</strike></li>
+				{% endif %}
+			{% endfor %}
+		</ul>
+		
+		<form method="POST">
+			Add to the list: </br>
+			<input type="text" name="add"></br>
+		</form>
+
+		<br>
+		<a href="/logout">Logout</a>
+	</body>
+
+
+</html>
+

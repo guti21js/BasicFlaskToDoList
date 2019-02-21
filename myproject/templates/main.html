@@ -1,0 +1,25 @@
+<html>
+	<head>
+	</head>
+	<body>
+		
+		<h2>To Do: </h2>
+		<ul>
+			{% for data in datas %}
+				{% if data["completed"] == False%}
+				<li>{{data["name"]}}</li>
+				{%else%}
+				<li><strike>{{data["name"]}}</strike></li>
+				{% endif %}
+			{% endfor %}
+		</ul>
+		
+		<form method="POST">
+			Add to the list: </br>
+			<input type="text" name="name"></br>
+		</form>
+	</body>
+
+
+</html>
+
