@@ -1,10 +1,14 @@
 from flask import Flask, render_template, request,url_for,redirect
 import json , requests, os
+from db import initialize, createuser, finduser,getlist
 
 
 cookies={}
 username={}
 item={}
+items={}
+cursor={}
+connect={}
 
 url ='https://hunter-todo-api.herokuapp.com/user'
 app = Flask(__name__)
@@ -19,13 +23,29 @@ with open('data.json') as file:
 
 @app.route('/', methods=['GET','POST'])
 def register():
+
+	##try:
+	c,conn =initialize()
+	global cursor
+	global connect
+	cursor=c
+	connect=conn
+		##return("okay")
+	##except Exception as e:
+		##return (str(e))
+		
 	if request.method=='POST':
 		user=request.form['newusername']	
+		output=createuser(user,c,conn)
 		
-		r= requests.post('https://hunter-todo-api.herokuapp.com/user', json={'username':user})
+		'''r= requests.post('https://hunter-todo-api.herokuapp.com/user', json={'username':user})
 		text = json.loads(r.text)
-		print(text)
-		return redirect(url_for("login"))
+		print(text)'''
+		print(output)
+		if output==False:
+			return render_template('register.html')
+		else:
+			return redirect(url_for("login"))
 	else:
 		return render_template('register.html')
 
@@ -42,14 +62,25 @@ def loginPost():
 	user=request.form['username']
 	global username
 	global cookies
-	username={"username":user}
+	
+	username=user
+	
+	
+	'''username={"username":user}
 	r = requests.post('https://hunter-todo-api.herokuapp.com/auth', json={"username":user})
 
-	text = json.loads(r.text)
+	text = json.loads(r.text) 
 	print(text)
 	cookies={"sillyauth":text["token"]}
 
-	requests.post('https://hunter-todo-api.herokuapp.com/auth', cookies=cookies, json=username)
+	requests.post('https://hunter-todo-api.herokuapp.com/auth', cookies=cookies, json=username) '''
+	
+	output=finduser(username,cursor,connect)
+	
+	
+	
+	print(output)
+	
 
 	return redirect(url_for('todo'))
 
@@ -59,11 +90,12 @@ def loginPost():
 @app.route('/todo')
 def todo():
 	
-	r=requests.get('https://hunter-todo-api.herokuapp.com/todo-item',cookies=cookies)
+	'''r=requests.get('https://hunter-todo-api.herokuapp.com/todo-item',cookies=cookies)
 	text=json.loads(r.text)
-	print(text)
-
-	return render_template('todo.html', tasks=text)
+	print(text)'''
+	global items
+	items = getlist(username,cursor,connect)
+	return render_template('todo.html', tasks=items)
 
 
 
